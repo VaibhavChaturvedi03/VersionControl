@@ -7,6 +7,7 @@ const http = require("http");
 const { Server } = require("socket.io"); 
 const yargs = require("yargs");
 const { hideBin } = require("yargs/helpers");
+const mainRouter = require("./routes/main.router");
 
 const { initRepo } = require("./controllers/init");
 const { addRepo } = require("./controllers/add");
@@ -64,6 +65,8 @@ function StartServer() {
 
   app.use(express.json());
   app.use(cors({ origin: "*" }));
+
+  app.use("/", mainRouter);
 
   const mongoURI = process.env.MONGODB_URI;
   if (!mongoURI) {
