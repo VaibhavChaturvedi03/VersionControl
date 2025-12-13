@@ -16,7 +16,7 @@ const { pushRepo } = require("./controllers/push");
 const { pullRepo } = require("./controllers/pull");
 const { revertRepo } = require("./controllers/revert");
 
-dotenv.config(); // load .env values
+dotenv.config();
 
 yargs(hideBin(process.argv))
   .command("start", "Start the server", {}, StartServer) 
