@@ -117,12 +117,61 @@ async function getUserProfile(req, res) {
     };
 };
 
-const updateUserProfile = (req, res) => {
-    res.send('profile Updated');
+async function updateUserProfile(req, res) {
+    const currentID = req.params.id;
+  const { email, password } = req.body;
+
+  try {
+    await connectClient();
+    const db = client.db("versioncontrol");
+    const usersCollection = db.collection("users");
+
+    let updateFields = { email };
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      updateFields.password = hashedPassword;
+    }
+
+    const result = await usersCollection.findOneAndUpdate(
+      {
+        _id: new ObjectId(currentID),
+      },
+      { $set: updateFields },
+      { returnDocument: "after" }
+    );
+    if (!result.value) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.send(result.value);
+  } catch (err) {
+    console.error("Error during updating : ", err.message);
+    res.status(500).send("Server error!");
+  };
 };
 
-const deleteUserProfile = (req, res) => {
-    res.send('profile deleted');
+async function deleteUserProfile (req, res) {
+    const currentID = req.params.id;
+
+    try{
+        await connectClient();
+        const db = client.db("versioncontrol");
+        const usersCollection = db.collection("users");
+
+        const result = await usersCollection.deleteOne({
+            _id: new ObjectId(currentID),
+        });
+
+        if(result.deletedCount === 0){
+            return res.status(404).json({ message: "User not found!" });
+        }
+
+        res.json({ message: "User deleted successfully!" });
+    }catch (err) {
+        console.error("Error during deletion : ", err.message);
+        res.status(500).send("Server error!");
+    };
 };
 
 module.exports = {
