@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {useNavigate, useRoutes} from 'react-router-dom';
 
-import Dashboard from './components/Dashboard.jsx';
-import Profile from './components/Profile.jsx';
-import Login from './components/Login.jsx';
-import Signup from './components/Signup.jsx';  
+import Dashboard from './components/dashboard/Dashboard.jsx';
+import Profile from './components/user/Profile.jsx';
+import Login from './components/auth/Login.jsx';
+import Signup from './components/auth/Signup.jsx';  
 
 import {useAuth} from './authContext.jsx';
 
